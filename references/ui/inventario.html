@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="es" style="width: 1280px; height: 1754px; overflow: hidden; position: relative;">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="web_dashboard" name="shell-type">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <style>
+        @layer base {
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                overscroll-behavior: none;
+            }
+
+            main>:first-child {
+                margin-top: 0 !important;
+            }
+
+            main>:last-child {
+                margin-bottom: 0 !important;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-surface": "#131b2e", "inverse-surface": "#283044", "surface-dim": "#d2d9f4", "surface-tint": "#7331df", "secondary-fixed": "#85f8c4", "primary-container": "#6d28d9", "on-secondary-fixed-variant": "#005137", "on-primary-fixed": "#250059", "outline": "#7b7486", "primary-fixed-dim": "#d3bbff", "on-secondary": "#ffffff", "inverse-on-surface": "#eef0ff", "secondary": "#006c4a", "surface-bright": "#faf8ff", "on-error-container": "#93000a", "on-surface-variant": "#4a4455", "on-primary-fixed-variant": "#5b00c5", "outline-variant": "#ccc3d7", "on-secondary-container": "#00714e", "on-tertiary-fixed-variant": "#6e3900", "on-primary-container": "#dac5ff", "surface-container-highest": "#dae2fd", "surface-container-low": "#f2f3ff", "secondary-container": "#82f5c1", "surface-container-lowest": "#ffffff", "tertiary-fixed-dim": "#ffb77d", "secondary-fixed-dim": "#68dba9", "primary-fixed": "#ebddff", "inverse-primary": "#d3bbff", "surface-container-high": "#e2e7ff", "on-error": "#ffffff", "error-container": "#ffdad6", "surface-container": "#eaedff", "surface": "#faf8ff", "surface-variant": "#dae2fd", "on-tertiary": "#ffffff", "on-tertiary-fixed": "#2f1500", "on-background": "#131b2e", "on-secondary-fixed": "#002114", "tertiary-container": "#884800", "tertiary-fixed": "#ffdcc3", "error": "#ba1a1a", "tertiary": "#653400", "background": "#faf8ff", "on-tertiary-container": "#ffc394", "on-primary": "#ffffff", "primary": "#5300b7" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-sm": "0.5rem", "margin": "1.5rem", "margin-mobile": "1rem", "space-xs": "0.25rem", "gutter": "1.25rem", "space-lg": "1.5rem", "space-xl": "2rem", "space-md": "1rem", "gutter-mobile": "0.75rem" }, fontFamily: { "headline-lg-mobile": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "code-num": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"] }, fontSize: { "headline-lg-mobile": ["22px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "700" }], "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "600" }], "headline-md": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }], "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }], "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.04em", fontWeight: "700" }], "headline-lg": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-xl": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }], "code-num": ["14px", { lineHeight: "20px", fontWeight: "500" }], "body-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }], "headline-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }], "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600" }], "headline-xl-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.01em", fontWeight: "700" }] } } } }</script>
+</head>
+
+<body class="bg-surface font-body-md text-on-surface antialiased">
+    <aside
+        class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between">
+        <div class="flex flex-col">
+            <div class="h-16 px-space-lg flex items-center gap-space-sm bg-surface-container-lowest">
+                <div class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center"><span
+                        class="material-symbols-outlined text-on-primary text-[20px]">store</span></div>
+                <div class="flex flex-col"><span
+                        class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">Abarrotes</span><span
+                        class="font-label-sm text-label-sm text-on-surface-variant font-medium">Panel Central</span>
+                </div>
+            </div>
+            <div class="px-space-md py-space-sm">
+                <div class="px-space-sm pb-space-xs"><span
+                        class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Operaciones</span>
+                </div>
+                <nav class="flex flex-col gap-space-xs"
+                    data-active-classes="bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-sm">
+                    <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+                        data-path="compras" href="#"><span class="material-symbols-outlined text-[20px]"
+                            style="font-variation-settings: &quot;FILL&quot; 0;">local_shipping</span><span
+                            class="font-label-lg text-label-lg">Compras</span></a><a
+                        class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-sm transition-all"
+                        data-path="inventario" href="#"><span class="material-symbols-outlined text-[20px]"
+                            style="font-variation-settings: &quot;FILL&quot; 1;">inventory_2</span><span
+                            class="font-label-lg text-label-lg">Inventario</span></a><a
+                        class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+                        data-path="reportes" href="#"><span class="material-symbols-outlined text-[20px]"
+                            style="font-variation-settings: &quot;FILL&quot; 0;">analytics</span><span
+                            class="font-label-lg text-label-lg">Reportes</span></a><a
+                        class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+                        data-path="ajustes" href="#"><span class="material-symbols-outlined text-[20px]"
+                            style="font-variation-settings: &quot;FILL&quot; 0;">settings</span><span
+                            class="font-label-lg text-label-lg">Ajustes</span></a></nav>
+            </div>
+        </div>
+        <div class="p-space-md bg-surface-container-low"><a
+                class="flex items-center gap-space-sm w-full px-space-md py-space-sm rounded-xl text-error hover:bg-error-container hover:text-on-error-container transition-all"
+                data-path="login" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span
+                    class="font-label-lg text-label-lg font-semibold">Cerrar Sesión</span></a></div>
+    </aside>
+    <div class="pl-64">
+        <header
+            class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40">
+            <div class="h-16 w-full px-space-lg flex items-center justify-between">
+                <div class="flex flex-col"><span
+                        class="font-headline-sm text-headline-sm text-on-surface font-bold">TiendaAbarrotes Almacén
+                        &amp; Administración</span>
+                    <div class="flex items-center gap-space-xs text-on-surface-variant"><span
+                            class="material-symbols-outlined text-[14px]">schedule</span><span
+                            class="font-body-sm text-body-sm" id="header-date-time">Lunes, 24 Octubre | 10:45 AM</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-space-md">
+                    <div class="hidden sm:flex flex-col text-right"><span
+                            class="font-label-lg text-label-lg text-on-surface font-semibold">Juan Pérez</span><span
+                            class="font-body-sm text-body-sm text-on-surface-variant">Encargado de Almacén</span></div>
+                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span
+                            class="material-symbols-outlined text-on-primary text-[18px]">person</span></div>
+                </div>
+            </div>
+        </header>
+        <main class="w-full pt-16 bg-surface min-h-screen px-space-lg py-space-lg">
+            <div class="flex flex-col w-full gap-space-lg">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-space-md">
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-space-xs text-outline mb-1">
+                            <span class="font-label-sm text-label-sm uppercase tracking-wider">Módulo Operativo</span>
+                            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                            <span
+                                class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Almacén
+                                Central</span>
+                        </div>
+                        <h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">Control
+                            de Inventario</h1>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Supervisión de existencias en
+                            tiempo real, rotación de almacén y monitoreo de caducidades críticas.</p>
+                    </div>
+                    <div class="flex items-center gap-space-sm self-start md:self-auto">
+                        <button
+                            class="inline-flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container-low transition-all"
+                            type="button">
+
+
+                        </button>
+                        <button
+                            class="inline-flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold shadow-sm hover:bg-primary transition-all"
+                            type="button">
+                            <span class="material-symbols-outlined text-[20px]">add_box</span>
+                            <span>+ Agregar Producto Nuevo</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+
+                    <div
+                        class="relative overflow-hidden bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <span class="font-label-md text-label-md text-on-surface-variant block">Alerta Stock
+                                    Crítico</span>
+                                <span class="font-headline-lg text-headline-lg text-error font-bold mt-1 block">4 <span
+                                        class="font-body-md text-body-md text-outline font-normal">productos</span></span>
+                            </div>
+                            <div
+                                class="w-10 h-10 rounded-xl bg-error-container flex items-center justify-center text-error">
+                                <span class="material-symbols-outlined text-[22px]">warning</span>
+                            </div>
+                        </div>
+                        <div class="mt-space-md flex items-center gap-space-xs">
+                            <span
+                                class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                                <span class="material-symbols-outlined text-[14px]">priority_high</span>
+                                Reabastecer ya
+                            </span>
+                            <span class="font-body-sm text-body-sm text-outline">menor a 10 uds</span>
+                        </div>
+                    </div>
+                    <div
+                        class="relative overflow-hidden bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <span class="font-label-md text-label-md text-on-surface-variant block">Próximos a
+                                    Vencer (&lt;7 días)</span>
+                                <span class="font-headline-lg text-headline-lg text-tertiary font-bold mt-1 block">3
+                                    <span class="font-body-md text-body-md text-outline font-normal">lotes</span></span>
+                            </div>
+                            <div
+                                class="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center text-tertiary-container">
+                                <span class="material-symbols-outlined text-[22px]">hourglass_bottom</span>
+                            </div>
+                        </div>
+                        <div class="mt-space-md flex items-center gap-space-xs">
+                            <span
+                                class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-tertiary-fixed-dim text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold">
+                                Remate / Merma
+                            </span>
+                            <span class="font-body-sm text-body-sm text-outline">acción sugerida</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div
+                    class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+                    <div class="relative flex-1">
+                        <span
+                            class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+                        <input
+                            class="w-full pl-11 pr-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface placeholder:text-outline font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest shadow-inner transition-all"
+                            id="inventory-search"
+                            placeholder="Buscar por producto, código de barras o SKU (ej. #INV-101, Leche, Pan)..."
+                            type="text">
+                    </div>
+                    <div class="flex flex-wrap items-center gap-space-xs sm:gap-space-sm">
+                        <div class="relative">
+                            <select
+                                class="appearance-none bg-surface-container-low text-on-surface font-label-lg text-label-lg font-medium pl-3.5 pr-8 py-2.5 rounded-xl focus:outline-none cursor-pointer"
+                                id="filter-category">
+                                <option value="all">Todas las Categorías</option>
+                                <option value="Abarrotes">Abarrotes</option>
+                                <option value="Lácteos">Lácteos</option>
+                                <option value="Frescos">Frescos</option>
+                                <option value="Bebidas">Bebidas</option>
+                                <option value="Limpieza">Limpieza</option>
+                                <option value="Panadería">Panadería</option>
+                            </select>
+                            <span
+                                class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[18px]">expand_more</span>
+                        </div>
+                        <div class="relative">
+                            <select
+                                class="appearance-none bg-surface-container-low text-on-surface font-label-lg text-label-lg font-medium pl-3.5 pr-8 py-2.5 rounded-xl focus:outline-none cursor-pointer"
+                                id="filter-status">
+                                <option value="all">Estado: Todos</option>
+                                <option value="critical">Stock Crítico (&lt;10)</option>
+                                <option value="optimal">Stock Óptimo (10+)</option>
+                                <option value="expiring">Próximos a Vencer</option>
+                            </select>
+                            <span
+                                class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[18px]">tune</span>
+                        </div>
+                        <button
+                            class="inline-flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg font-medium transition-all"
+                            type="button">
+                            <span class="material-symbols-outlined text-[18px]">file_download</span>
+                            <span>Exportar</span>
+                        </button>
+                        <button
+                            class="p-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant transition-all"
+                            title="Actualizar datos" type="button">
+                            <span class="material-symbols-outlined text-[18px]">refresh</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse" id="inventory-table">
+                            <thead>
+                                <tr
+                                    class="bg-surface-container-low text-outline font-label-sm text-label-sm uppercase tracking-wider select-none">
+                                    <th class="py-3.5 px-space-md font-semibold">SKU / ID</th>
+                                    <th class="py-3.5 px-space-md font-semibold">Producto &amp; Especificación</th>
+                                    <th class="py-3.5 px-space-md font-semibold">Categoría</th>
+                                    <th class="py-3.5 px-space-md font-semibold text-right">Precio Actual</th>
+                                    <th class="py-3.5 px-space-md font-semibold text-center">Stock Actual</th>
+                                    <th class="py-3.5 px-space-md font-semibold">F. Entrada</th>
+                                    <th class="py-3.5 px-space-md font-semibold">F. Caducidad</th>
+                                    <th class="py-3.5 px-space-md font-semibold text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y-0 text-on-surface font-body-md text-body-md" id="table-body">
+                                <tr class="hover:bg-surface-container-low/70 transition-colors group">
+                                    <td
+                                        class="py-3.5 px-space-md font-code-num text-code-num font-semibold text-primary">
+                                        #INV-101</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-headline-sm text-headline-sm text-on-surface font-semibold">Leche
+                                                Entera Pasteurizada 1L</span>
+                                            <span class="font-body-sm text-body-sm text-outline">Envase Tetrapak UHT |
+                                                Código 750102030401</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-semibold">Lácteos</span>
+                                    </td>
+                                    <td
+                                        class="py-3.5 px-space-md text-right font-code-num text-code-num font-bold text-on-surface">
+                                        $26.50</td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                            6 uds - Crítico
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-on-surface-variant font-code-num text-body-sm">
+                                        18/10/2024</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-bold animate-pulse">
+                                            <span class="material-symbols-outlined text-[14px]">alarm</span>
+                                            27/10/2024 - ¡3 días!
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <div class="inline-flex items-center gap-1">
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all"
+                                                title="Editar SKU" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container transition-all"
+                                                title="Dar de baja o registrar merma" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="hover:bg-surface-container-low/70 transition-colors group bg-surface-container-lowest">
+                                    <td
+                                        class="py-3.5 px-space-md font-code-num text-code-num font-semibold text-primary">
+                                        #INV-102</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-headline-sm text-headline-sm text-on-surface font-semibold">Arroz
+                                                Grano Extra 1kg</span>
+                                            <span class="font-body-sm text-body-sm text-outline">Bolsa polietileno |
+                                                Código 750102030402</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm font-semibold">Abarrotes</span>
+                                    </td>
+                                    <td
+                                        class="py-3.5 px-space-md text-right font-code-num text-code-num font-bold text-on-surface">
+                                        $32.00</td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                            48 uds - Óptimo
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-on-surface-variant font-code-num text-body-sm">
+                                        01/10/2024</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+                                            15/08/2025 - Vigente
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <div class="inline-flex items-center gap-1">
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all"
+                                                title="Editar SKU" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container transition-all"
+                                                title="Dar de baja" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-surface-container-low/70 transition-colors group">
+                                    <td
+                                        class="py-3.5 px-space-md font-code-num text-code-num font-semibold text-primary">
+                                        #INV-103</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-headline-sm text-headline-sm text-on-surface font-semibold">Pan
+                                                de Caja Blanco 680g</span>
+                                            <span class="font-body-sm text-body-sm text-outline">Envoltura sellada con
+                                                alambre | Código 750102030403</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold">Panadería</span>
+                                    </td>
+                                    <td
+                                        class="py-3.5 px-space-md text-right font-code-num text-code-num font-bold text-on-surface">
+                                        $45.00</td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                            5 uds - Crítico
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-on-surface-variant font-code-num text-body-sm">
+                                        20/10/2024</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-bold animate-pulse">
+                                            <span class="material-symbols-outlined text-[14px]">warning</span>
+                                            26/10/2024 - ¡2 días!
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <div class="inline-flex items-center gap-1">
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all"
+                                                title="Editar SKU" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container transition-all"
+                                                title="Dar de baja" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="hover:bg-surface-container-low/70 transition-colors group bg-surface-container-lowest">
+                                    <td
+                                        class="py-3.5 px-space-md font-code-num text-code-num font-semibold text-primary">
+                                        #INV-104</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-headline-sm text-headline-sm text-on-surface font-semibold">Huevo
+                                                Blanco Cono 30 pzas</span>
+                                            <span class="font-body-sm text-body-sm text-outline">Empaque de cartón
+                                                reciclado | Granja San Juan</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">Frescos</span>
+                                    </td>
+                                    <td
+                                        class="py-3.5 px-space-md text-right font-code-num text-code-num font-bold text-on-surface">
+                                        $84.00</td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                            8 uds - Bajo
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-on-surface-variant font-code-num text-body-sm">
+                                        16/10/2024</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">
+                                            <span class="material-symbols-outlined text-[14px]">hourglass_top</span>
+                                            29/10/2024 - 5 días
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <div class="inline-flex items-center gap-1">
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all"
+                                                title="Editar SKU" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container transition-all"
+                                                title="Dar de baja" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-surface-container-low/70 transition-colors group">
+                                    <td
+                                        class="py-3.5 px-space-md font-code-num text-code-num font-semibold text-primary">
+                                        #INV-105</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-headline-sm text-headline-sm text-on-surface font-semibold">Frijol
+                                                Negro Michoacán 1kg</span>
+                                            <span class="font-body-sm text-body-sm text-outline">Bolsa termosellada |
+                                                Cosecha Selecta</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm font-semibold">Abarrotes</span>
+                                    </td>
+                                    <td
+                                        class="py-3.5 px-space-md text-right font-code-num text-code-num font-bold text-on-surface">
+                                        $38.00</td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                            55 uds - Óptimo
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-on-surface-variant font-code-num text-body-sm">
+                                        05/10/2024</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+                                            30/11/2025 - Vigente
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <div class="inline-flex items-center gap-1">
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all"
+                                                title="Editar SKU" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container transition-all"
+                                                title="Dar de baja" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="hover:bg-surface-container-low/70 transition-colors group bg-surface-container-lowest">
+                                    <td
+                                        class="py-3.5 px-space-md font-code-num text-code-num font-semibold text-primary">
+                                        #INV-106</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-headline-sm text-headline-sm text-on-surface font-semibold">Refresco
+                                                Cola 600ml No Retornable</span>
+                                            <span class="font-body-sm text-body-sm text-outline">Botella PET |
+                                                Presentación Individual</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-fixed text-primary font-label-sm text-label-sm font-semibold">Bebidas</span>
+                                    </td>
+                                    <td
+                                        class="py-3.5 px-space-md text-right font-code-num text-code-num font-bold text-on-surface">
+                                        $18.50</td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                            92 uds - Óptimo
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-on-surface-variant font-code-num text-body-sm">
+                                        15/10/2024</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+                                            10/05/2025 - Vigente
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <div class="inline-flex items-center gap-1">
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all"
+                                                title="Editar SKU" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container transition-all"
+                                                title="Dar de baja" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-surface-container-low/70 transition-colors group">
+                                    <td
+                                        class="py-3.5 px-space-md font-code-num text-code-num font-semibold text-primary">
+                                        #INV-107</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-headline-sm text-headline-sm text-on-surface font-semibold">Detergente
+                                                Multiusos Biodegradable 900g</span>
+                                            <span class="font-body-sm text-body-sm text-outline">Bolsa en polvo con
+                                                aroma floral | Blancura</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-label-sm font-semibold">Limpieza</span>
+                                    </td>
+                                    <td
+                                        class="py-3.5 px-space-md text-right font-code-num text-code-num font-bold text-on-surface">
+                                        $29.00</td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                            24 uds - Normal
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-on-surface-variant font-code-num text-body-sm">
+                                        10/10/2024</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+                                            20/09/2026 - Vigente
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <div class="inline-flex items-center gap-1">
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all"
+                                                title="Editar SKU" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container transition-all"
+                                                title="Dar de baja" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="hover:bg-surface-container-low/70 transition-colors group bg-surface-container-lowest">
+                                    <td
+                                        class="py-3.5 px-space-md font-code-num text-code-num font-semibold text-primary">
+                                        #INV-108</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-headline-sm text-headline-sm text-on-surface font-semibold">Jamón
+                                                de Pavo Virginia 250g</span>
+                                            <span class="font-body-sm text-body-sm text-outline">Paquete al vacío |
+                                                Rebanado delgado</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">Frescos</span>
+                                    </td>
+                                    <td
+                                        class="py-3.5 px-space-md text-right font-code-num text-code-num font-bold text-on-surface">
+                                        $42.00</td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                            7 uds - Crítico
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-on-surface-variant font-code-num text-body-sm">
+                                        19/10/2024</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-bold">
+                                            <span class="material-symbols-outlined text-[14px]">alarm</span>
+                                            28/10/2024 - 4 días
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <div class="inline-flex items-center gap-1">
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all"
+                                                title="Editar SKU" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container transition-all"
+                                                title="Dar de baja" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-surface-container-low/70 transition-colors group">
+                                    <td
+                                        class="py-3.5 px-space-md font-code-num text-code-num font-semibold text-primary">
+                                        #INV-109</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-headline-sm text-headline-sm text-on-surface font-semibold">Aceite
+                                                Vegetal Comestible 800ml</span>
+                                            <span class="font-body-sm text-body-sm text-outline">Botella ergonómica |
+                                                Puro de Soya</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm font-semibold">Abarrotes</span>
+                                    </td>
+                                    <td
+                                        class="py-3.5 px-space-md text-right font-code-num text-code-num font-bold text-on-surface">
+                                        $39.50</td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                            35 uds - Normal
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-on-surface-variant font-code-num text-body-sm">
+                                        08/10/2024</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+                                            14/01/2026 - Vigente
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <div class="inline-flex items-center gap-1">
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all"
+                                                title="Editar SKU" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container transition-all"
+                                                title="Dar de baja" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="hover:bg-surface-container-low/70 transition-colors group bg-surface-container-lowest">
+                                    <td
+                                        class="py-3.5 px-space-md font-code-num text-code-num font-semibold text-primary">
+                                        #INV-110</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <div class="flex flex-col">
+                                            <span
+                                                class="font-headline-sm text-headline-sm text-on-surface font-semibold">Galletas
+                                                María Paquete 170g</span>
+                                            <span class="font-body-sm text-body-sm text-outline">Rollo tradicional
+                                                dorado | Cuétara</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm font-semibold">Abarrotes</span>
+                                    </td>
+                                    <td
+                                        class="py-3.5 px-space-md text-right font-code-num text-code-num font-bold text-on-surface">
+                                        $16.00</td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                            60 uds - Óptimo
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-on-surface-variant font-code-num text-body-sm">
+                                        14/10/2024</td>
+                                    <td class="py-3.5 px-space-md">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+                                            30/06/2025 - Vigente
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-space-md text-center">
+                                        <div class="inline-flex items-center gap-1">
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all"
+                                                title="Editar SKU" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            <button
+                                                class="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container transition-all"
+                                                title="Dar de baja" type="button">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div
+                        class="px-space-md py-3.5 bg-surface-container-low/60 flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+                        <div class="flex items-center gap-space-xs text-outline font-body-sm text-body-sm">
+                            <span>Mostrando</span>
+                            <span class="font-code-num text-code-num font-bold text-on-surface">1 a 10</span>
+                            <span>de</span>
+                            <span class="font-code-num text-code-num font-bold text-on-surface">1,240</span>
+                            <span>artículos en bodega</span>
+                        </div>
+                        <div class="flex items-center gap-space-xs">
+                            <button
+                                class="p-1.5 rounded-lg bg-surface-container-lowest text-outline hover:text-on-surface shadow-sm disabled:opacity-40"
+                                disabled="" type="button">
+                                <span class="material-symbols-outlined text-[18px]">first_page</span>
+                            </button>
+                            <button
+                                class="p-1.5 rounded-lg bg-surface-container-lowest text-outline hover:text-on-surface shadow-sm disabled:opacity-40"
+                                disabled="" type="button">
+                                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                            </button>
+                            <span
+                                class="px-3 py-1 rounded-lg bg-primary-container text-on-primary font-code-num text-code-num font-bold">1</span>
+                            <button
+                                class="px-3 py-1 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container shadow-sm font-code-num text-code-num font-medium"
+                                type="button">2</button>
+                            <button
+                                class="px-3 py-1 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container shadow-sm font-code-num text-code-num font-medium"
+                                type="button">3</button>
+                            <span class="text-outline px-1">...</span>
+                            <button
+                                class="px-3 py-1 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container shadow-sm font-code-num text-code-num font-medium"
+                                type="button">124</button>
+                            <button
+                                class="p-1.5 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface shadow-sm"
+                                type="button">
+                                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                            </button>
+                            <button
+                                class="p-1.5 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface shadow-sm"
+                                type="button">
+                                <span class="material-symbols-outlined text-[18px]">last_page</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col md:flex-row items-center justify-between gap-space-md">
+                    <div class="flex items-center gap-space-md">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center text-primary flex-shrink-0">
+                            <span class="material-symbols-outlined text-[20px]">sync</span>
+                        </div>
+                        <div>
+                            <h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Sincronización
+                                POS &amp; Almacén</h4>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">Los movimientos en caja
+                                registradora descuentan existencias automáticamente en este libro de inventario.</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex items-center gap-space-sm text-on-secondary-container font-label-md text-label-md bg-secondary-fixed/40 px-3.5 py-1.5 rounded-full">
+                        <span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+                        <span>Terminal POS 1: En Línea</span>
+                    </div>
+                </div>
+            </div>
+            <script>
+                    (function initInventoryModule() {
+                        const navItems = document.querySelectorAll('aside nav a');
+                        navItems.forEach(item => {
+                            if (item.getAttribute('data-path') === 'inventario') {
+                                item.className = 'flex items-center gap-space-sm px-space-md py-space-sm rounded-xl bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-sm transition-all';
+                                const icon = item.querySelector('.material-symbols-outlined');
+                                if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+                            } else {
+                                item.className = 'flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all';
+                                const icon = item.querySelector('.material-symbols-outlined');
+                                if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+                            }
+                        });
+
+                        const searchInput = document.getElementById('inventory-search');
+                        const tableBody = document.getElementById('table-body');
+                        const rows = tableBody ? tableBody.querySelectorAll('tr') : [];
+                        const filterCat = document.getElementById('filter-category');
+                        const filterStat = document.getElementById('filter-status');
+
+                        function filterTable() {
+                            const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+                            const selectedCategory = filterCat ? filterCat.value : 'all';
+                            const selectedStatus = filterStat ? filterStat.value : 'all';
+
+                            rows.forEach(row => {
+                                const text = row.innerText.toLowerCase();
+                                const matchesQuery = !query || text.includes(query);
+
+                                let matchesCat = true;
+                                if (selectedCategory !== 'all') {
+                                    const categoryCell = row.children[2] ? row.children[2].innerText : '';
+                                    matchesCat = categoryCell.includes(selectedCategory);
+                                }
+
+                                let matchesStatus = true;
+                                if (selectedStatus === 'critical') {
+                                    matchesStatus = text.includes('crítico') || text.includes('bajo');
+                                } else if (selectedStatus === 'optimal') {
+                                    matchesStatus = text.includes('óptimo') || text.includes('normal');
+                                } else if (selectedStatus === 'expiring') {
+                                    matchesStatus = text.includes('¡') || text.includes('días');
+                                }
+
+                                if (matchesQuery && matchesCat && matchesStatus) {
+                                    row.style.display = '';
+                                } else {
+                                    row.style.display = 'none';
+                                }
+                            });
+                        }
+
+                        if (searchInput) searchInput.addEventListener('input', filterTable);
+                        if (filterCat) filterCat.addEventListener('change', filterTable);
+                        if (filterStat) filterStat.addEventListener('change', filterTable);
+                    })();
+            </script>
+        </main>
+    </div>
+
+
+    <div id="snapdom-sandbox" data-snapdom-sandbox="true" aria-hidden="true"
+        style="position: absolute; left: -9999px; top: -9999px; width: 0px; height: 0px; overflow: hidden;"></div>
+</body>
+
+</html>
