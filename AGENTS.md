@@ -28,7 +28,7 @@ tienda-app/
 │   ├── package.json           # Dependencias de backend (pnpm)
 │   ├── .env                   # Variables de entorno locales
 │   └── src/                   # Controladores, rutas, servicios y conexión a BD
-├── frontend/                  # SPA con React + Vite + Tailwind CSS
+├── frontend/                  # Aplicación React + Vite + Tailwind CSS con react-router-dom
 │   ├── src/                   # Componentes, vistas, hooks y utilidades
 │   ├── index.html             # Entry point HTML (fuentes Plus Jakarta Sans & Material Symbols)
 │   ├── package.json           # Dependencias de frontend (pnpm)
@@ -66,14 +66,15 @@ El backend debe respetar fielmente las tablas, nombres de columnas, tipos y rest
 
 ## 4. Reglas y Buenas Prácticas de Frontend (React + Tailwind CSS)
 
-### 4.1. Componentización y Arquitectura
-- **Modularidad**: No crear componentes monolíticos. Dividir pantallas en componentes reutilizables, legibles y atómicos:
+### 4.1. Arquitectura, Enrutamiento (`react-router-dom`) y Modularidad
+- **Enrutamiento y Paginación con React Router DOM**: Se trabajará obligatoriamente con **`react-router-dom`** para gestionar la navegación y paginación entre las pantallas/módulos principales (`/login`, `/venta`, `/compra`, `/inventario`), manteniendo cada vista como un módulo independiente y aislado según las referencias de `references/ui/` (mediante `BrowserRouter`, `Routes`, `Route`, `NavLink` y `useNavigate`).
+- **Modularidad de Componentes**: No crear componentes monolíticos. Dividir cada pantalla en componentes reutilizables, legibles y atómicos:
   - Componentes comunes: `Button`, `Input`, `Select`, `Badge`, `Modal`, `Table`, `Card`.
   - Componentes de layout: `Sidebar`, `Navbar`, `PageHeader`.
   - Componentes de dominio: `ProductSearchCard`, `CartTable`, `PaymentSummary`, `StockBadge`.
 - **Responsabilidad Única**: Cada componente debe tener una única responsabilidad clara.
-- **Manejo de Estado**: Separar la lógica de negocio de la UI usando Custom Hooks (ej. `useCart`, `useScanner`, `useAuth`, `useInventory`).
-- **Props Limpias**: Tipar o documentar claramente las props esperadas. No hacer *prop drilling* innecesario; usar React Context cuando sea pertinente (ej. autenticación o carrito de ventas).
+- **Manejo de Estado**: Separar la lógica de negocio de la UI usando Custom Hooks por módulo (ej. `useCart`, `useScanner`, `useAuth`, `useInventory`).
+- **Props Limpias**: Tipar o documentar claramente las props esperadas. Evitar estructuras sobrecargadas o dependencias innecesarias de estado global en pantallas aisladas.
 
 ### 4.2. Estilo y Fidelidad con Tailwind CSS
 - **Fidelidad Visual Estricta**: Los colores, espaciados, tipografías e iconos deben coincidir con las referencias HTML de `references/ui/`.
