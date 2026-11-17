@@ -1,4 +1,4 @@
-import { formatCurrency } from '../../data/mockData';
+import { formatCurrency } from '../../utils/formatters';
 
 /**
  * Sección inferior de notas de recepción y liquidación económica de la compra.

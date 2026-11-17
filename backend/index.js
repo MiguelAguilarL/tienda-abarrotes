@@ -1,31 +1,25 @@
-import express from 'express';
-import mysql from 'mysql2/promise';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import express from 'express';
+import { errorHandler } from './src/middlewares/errorHandler.js';
+import tiendaRoutes from './src/routes/tiendaRoutes.js';
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
+const PORT = process.env.PORT || 3000;
+
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  }),
+);
 app.use(express.json());
 
-const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
+app.use('/api', tiendaRoutes);
 
-app.get('/api/datos', async (req, res) => {
-    try {
-        const [rows] = await pool.query('SELECT * FROM mi_tabla');
-        res.json(rows);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+app.use(errorHandler);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Servidor en puerto ${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
 });

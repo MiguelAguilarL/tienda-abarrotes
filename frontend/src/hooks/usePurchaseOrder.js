@@ -1,38 +1,75 @@
-import { useCallback, useMemo, useState } from 'react';
-import {
-  INITIAL_COMPRA_ITEMS,
-  MOCK_PRODUCTOS,
-  MOCK_PROVEEDORES,
-} from '../data/mockData';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { tiendaApi } from '../services/api';
 
 /**
- * Custom Hook que gestiona el estado de la orden de compra (compra + d_compra).
+ * Custom Hook que carga proveedores y productos reales desde MySQL
+ * para la pantalla de Compras en modo solo lectura.
  */
 export function usePurchaseOrder() {
-  const [compraId, setCompraId] = useState(1);
-  const [providerId, setProviderId] = useState(MOCK_PROVEEDORES[0].id_proveedor);
+  const [providers, setProviders] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [providerId, setProviderId] = useState('');
   const [purchaseDate, setPurchaseDate] = useState(
     () => new Date().toISOString().split('T')[0],
   );
-  const [invoiceNumber, setInvoiceNumber] = useState('FAC-88492');
+  const [invoiceNumber, setInvoiceNumber] = useState('');
   const [notes, setNotes] = useState('');
-  const [items, setItems] = useState(INITIAL_COMPRA_ITEMS);
+  const [items, setItems] = useState([]);
 
-  const updateItemProduct = useCallback((rowId, newProductId) => {
-    const prodIdNum = Number(newProductId);
-    const product = MOCK_PRODUCTOS.find((p) => p.id_producto === prodIdNum);
-    setItems((prev) =>
-      prev.map((row) =>
-        row.rowId === rowId
-          ? {
-              ...row,
-              id_producto: prodIdNum,
-              costo: product ? product.costo_base : row.costo,
-            }
-          : row,
-      ),
-    );
+  useEffect(() => {
+    let active = true;
+    Promise.all([tiendaApi.getProveedores(), tiendaApi.getProductos()])
+      .then(([provData, prodData]) => {
+        if (!active) return;
+        setProviders(provData);
+        setProducts(prodData);
+        if (provData.length > 0) {
+          setProviderId(provData[0].id_proveedor);
+        }
+        if (prodData.length > 0) {
+          setItems([
+            {
+              rowId: 1,
+              id_producto: prodData[0].id_producto,
+              cantidad_compra: 1,
+              costo: prodData[0].p_actual,
+            },
+          ]);
+        }
+      })
+      .catch((err) => {
+        if (active) setError(err.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
+
+  const updateItemProduct = useCallback(
+    (rowId, newProductId) => {
+      const prodIdNum = Number(newProductId);
+      const product = products.find((p) => p.id_producto === prodIdNum);
+      setItems((prev) =>
+        prev.map((row) =>
+          row.rowId === rowId
+            ? {
+                ...row,
+                id_producto: prodIdNum,
+                costo: product ? product.p_actual : row.costo,
+              }
+            : row,
+        ),
+      );
+    },
+    [products],
+  );
 
   const updateItemQty = useCallback((rowId, nextQty) => {
     const parsed = Math.max(1, Number(nextQty) || 1);
@@ -51,17 +88,18 @@ export function usePurchaseOrder() {
   }, []);
 
   const addRow = useCallback(() => {
-    const defaultProduct = MOCK_PRODUCTOS[5] || MOCK_PRODUCTOS[0];
+    if (products.length === 0) return;
+    const defaultProduct = products[0];
     setItems((prev) => [
       ...prev,
       {
         rowId: Date.now() + Math.random(),
         id_producto: defaultProduct.id_producto,
-        cantidad_compra: 10,
-        costo: defaultProduct.costo_base,
+        cantidad_compra: 1,
+        costo: defaultProduct.p_actual,
       },
     ]);
-  }, []);
+  }, [products]);
 
   const removeRow = useCallback((rowId) => {
     setItems((prev) => {
@@ -71,17 +109,21 @@ export function usePurchaseOrder() {
   }, []);
 
   const resetOrder = useCallback(() => {
-    setProviderId(MOCK_PROVEEDORES[0].id_proveedor);
+    if (providers.length > 0) setProviderId(providers[0].id_proveedor);
     setPurchaseDate(new Date().toISOString().split('T')[0]);
     setInvoiceNumber('');
     setNotes('');
-    setItems(INITIAL_COMPRA_ITEMS);
-  }, []);
-
-  const registerOrder = useCallback(() => {
-    setCompraId((prev) => prev + 1);
-    setNotes('');
-  }, []);
+    if (products.length > 0) {
+      setItems([
+        {
+          rowId: Date.now(),
+          id_producto: products[0].id_producto,
+          cantidad_compra: 1,
+          costo: products[0].p_actual,
+        },
+      ]);
+    }
+  }, [providers, products]);
 
   const summary = useMemo(() => {
     let totalUnits = 0;
@@ -96,7 +138,10 @@ export function usePurchaseOrder() {
   }, [items]);
 
   return {
-    compraId,
+    providers,
+    products,
+    loading,
+    error,
     providerId,
     setProviderId,
     purchaseDate,
@@ -113,6 +158,5 @@ export function usePurchaseOrder() {
     addRow,
     removeRow,
     resetOrder,
-    registerOrder,
   };
 }

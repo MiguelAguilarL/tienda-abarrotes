@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CATEGORY_LABELS } from '../../data/mockData';
+import { CATEGORY_LABELS } from '../../utils/formatters';
 import Modal from '../common/Modal';
 
 const getInitialForm = (editingItem) => {

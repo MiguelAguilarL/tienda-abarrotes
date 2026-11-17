@@ -1,4 +1,4 @@
-import { CATEGORY_BADGE_CLASSES, CATEGORY_LABELS } from '../../data/mockData';
+import { CATEGORY_BADGE_CLASSES, CATEGORY_LABELS } from '../../utils/formatters';
 
 /**
  * Badge reutilizable para categorías y estados semánticos.

@@ -1,21 +1,38 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginCard from '../../components/login/LoginCard';
+import { setSessionEmployee, tiendaApi } from '../../services/api';
 
 /**
- * Pantalla de autenticación (/login).
- * Redirige según el puesto mock ingresado: Almacén -> /compra, Vendedor -> /venta.
+ * Pantalla de autenticación (/login) conectada a GET /api/empleados.
  */
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleLoginSuccess = ({ employeeInput }) => {
-    const normalized = employeeInput.toLowerCase();
-    const isWarehouse =
-      normalized.includes('juan') ||
-      normalized.includes('almacen') ||
-      normalized.includes('201');
+  useEffect(() => {
+    let active = true;
+    tiendaApi
+      .getEmpleados()
+      .then((data) => {
+        if (active) setEmployees(data);
+      })
+      .catch((err) => {
+        if (active) setError(err.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
-    navigate(isWarehouse ? '/compra' : '/venta');
+  const handleLoginSuccess = ({ employee }) => {
+    setSessionEmployee(employee);
+    navigate(employee.puesto === 'Almacen' ? '/compra' : '/venta');
   };
 
   return (
@@ -34,7 +51,12 @@ export default function LoginPage() {
       </header>
 
       <main className="w-full flex-1 flex flex-col items-center justify-center px-gutter-mobile md:px-gutter">
-        <LoginCard onLoginSuccess={handleLoginSuccess} />
+        <LoginCard
+          employees={employees}
+          loadingEmployees={loading}
+          apiError={error}
+          onLoginSuccess={handleLoginSuccess}
+        />
       </main>
 
       <footer className="w-full py-space-lg text-center">

@@ -1,4 +1,4 @@
-import { CATEGORY_LABELS } from '../../data/mockData';
+import { CATEGORY_LABELS } from '../../utils/formatters';
 
 const CATEGORIES = [
   'Lacteos',

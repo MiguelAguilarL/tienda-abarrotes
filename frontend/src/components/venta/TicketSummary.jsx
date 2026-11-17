@@ -1,4 +1,4 @@
-import { formatCurrency } from '../../data/mockData';
+import { formatCurrency } from '../../utils/formatters';
 
 /**
  * Columna derecha sticky: Ticket dinámico de venta y botones de cobro rápido.

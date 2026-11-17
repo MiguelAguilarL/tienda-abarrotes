@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { clearSessionEmployee } from '../../services/api';
 
 const POS_LINKS = [
   { to: '/venta', label: 'Punto de Venta', icon: 'point_of_sale', active: true },
@@ -127,6 +128,7 @@ export default function Sidebar({ variant = 'warehouse', onUnavailableClick }) {
       <div className={`p-space-md ${!isPos ? 'bg-surface-container-low' : ''}`}>
         <NavLink
           to="/login"
+          onClick={() => clearSessionEmployee()}
           className={`flex items-center gap-space-sm w-full px-space-md py-space-sm text-error font-label-lg text-label-lg hover:bg-error-container hover:text-on-error-container transition-all ${
             isPos ? 'rounded-lg' : 'rounded-xl font-semibold'
           }`}

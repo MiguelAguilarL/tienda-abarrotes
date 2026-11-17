@@ -1,19 +1,24 @@
 import { useCallback, useState } from 'react';
-import DashboardLayout from '../../components/layout/DashboardLayout';
 import Modal from '../../components/common/Modal';
+import DashboardLayout from '../../components/layout/DashboardLayout';
 import CatalogSearch from '../../components/venta/CatalogSearch';
 import CategoryFilter from '../../components/venta/CategoryFilter';
 import ProductCatalogTable from '../../components/venta/ProductCatalogTable';
 import TicketSummary from '../../components/venta/TicketSummary';
-import { formatCurrency } from '../../data/mockData';
 import { usePosCart } from '../../hooks/usePosCart';
+import { getSessionEmployee } from '../../services/api';
+import { formatCurrency } from '../../utils/formatters';
 
 /**
- * Pantalla Terminal Punto de Venta (/venta).
+ * Pantalla Terminal Punto de Venta (/venta) conectada a MySQL (solo lectura).
  */
 export default function VentaPage() {
   const [checkoutModal, setCheckoutModal] = useState(null);
   const [showShortcuts, setShowShortcuts] = useState(false);
+
+  const sessionEmp = getSessionEmployee();
+  const employeeName = sessionEmp?.nombre_empleado || 'Carlos López';
+  const employeeRole = sessionEmp?.puesto || 'Vendedor';
 
   const handleRequestCheckout = useCallback((method) => {
     setCheckoutModal({ method });
@@ -21,20 +26,14 @@ export default function VentaPage() {
 
   const pos = usePosCart({ onRequestCheckout: handleRequestCheckout });
 
-  const confirmSale = () => {
-    pos.completeSale();
-    setCheckoutModal(null);
-  };
-
   return (
     <DashboardLayout
       variant="pos"
-      employeeName="Carlos López"
-      employeeRole="Vendedor"
+      employeeName={employeeName}
+      employeeRole={employeeRole}
     >
       <div className="flex flex-col w-full pb-space-lg">
         <div className="flex flex-col lg:flex-row gap-space-md w-full items-start mt-space-sm">
-          {/* COLUMNA IZQUIERDA (69%) */}
           <div className="w-full lg:w-[69%] flex flex-col gap-space-sm">
             <CatalogSearch
               searchInputRef={pos.searchInputRef}
@@ -51,13 +50,14 @@ export default function VentaPage() {
 
             <ProductCatalogTable
               products={pos.filteredProducts}
+              loading={pos.loading}
+              error={pos.error}
               onAddProduct={pos.addProductToTicket}
             />
           </div>
 
-          {/* COLUMNA DERECHA (31%) */}
           <TicketSummary
-            saleId={pos.saleId}
+            saleId="Pendiente"
             items={pos.ticketItems}
             totals={pos.totals}
             onUpdateQty={pos.updateItemQty}
@@ -70,60 +70,45 @@ export default function VentaPage() {
         </div>
       </div>
 
-      {/* Modal de Cobro Mock */}
+      {/* Modal informativo de cobro (modo solo lectura) */}
       <Modal
         isOpen={Boolean(checkoutModal)}
         onClose={() => setCheckoutModal(null)}
-        title="Confirmar Cobro de Venta"
-        icon="point_of_sale"
+        title="Modo Solo Lectura"
+        icon="info"
       >
         {checkoutModal && (
           <div className="flex flex-col gap-space-md">
             <div className="bg-surface-container-low rounded-xl p-space-md flex items-center justify-between">
               <div>
                 <span className="font-label-sm text-label-sm text-outline uppercase">
-                  Folio de Venta
-                </span>
-                <p className="font-code-num text-headline-sm font-bold text-primary">
-                  id_venta: {pos.saleId}
-                </p>
-              </div>
-              <div className="text-right">
-                <span className="font-label-sm text-label-sm text-outline uppercase">
-                  Método de Pago
+                  Método Seleccionado
                 </span>
                 <p className="font-headline-sm text-headline-sm font-bold text-on-surface">
                   {checkoutModal.method}
                 </p>
               </div>
+              <div className="text-right">
+                <span className="font-label-sm text-label-sm text-outline uppercase">
+                  Total Calculado
+                </span>
+                <p className="font-headline-sm text-headline-sm font-bold text-primary">
+                  {formatCurrency(pos.totals.totalAmount)} MXN
+                </p>
+              </div>
             </div>
 
-            <div className="flex justify-between items-baseline px-1">
-              <span className="font-body-md text-on-surface-variant">
-                Total ({pos.totals.totalPieces} piezas):
-              </span>
-              <span className="font-headline-lg text-headline-lg font-bold text-primary">
-                {formatCurrency(pos.totals.totalAmount)} MXN
-              </span>
-            </div>
+            <p className="font-body-md text-body-md text-on-surface-variant">
+              Por el momento el sistema está en modo <strong>solo lectura</strong>. El registro de ventas en la base de datos (<code>venta</code>, <code>d_venta</code> y descuento en <code>inventario</code>) se habilitará en la siguiente fase.
+            </p>
 
             <div className="flex justify-end gap-space-sm pt-space-xs">
               <button
                 type="button"
                 onClick={() => setCheckoutModal(null)}
-                className="px-space-md py-2.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg cursor-pointer"
+                className="px-space-md py-2.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg cursor-pointer"
               >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={confirmSale}
-                className="px-space-md py-2.5 rounded-lg bg-secondary hover:bg-secondary/90 text-on-secondary font-label-lg text-label-lg flex items-center gap-1.5 cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  check_circle
-                </span>
-                Emitir Ticket
+                Entendido
               </button>
             </div>
           </div>

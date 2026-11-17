@@ -1,11 +1,16 @@
 import { useState } from 'react';
-import { formatCurrency } from '../../data/mockData';
+import { CATEGORY_ICONS, formatCurrency } from '../../utils/formatters';
 import { CategoryBadge, StockBadge } from '../common/Badge';
 
 /**
- * Tabla operativa de productos del catálogo POS.
+ * Tabla operativa de productos cargados desde MySQL.
  */
-export default function ProductCatalogTable({ products, onAddProduct }) {
+export default function ProductCatalogTable({
+  products,
+  loading,
+  error,
+  onAddProduct,
+}) {
   const [recentlyAddedId, setRecentlyAddedId] = useState(null);
 
   const handleAdd = (product) => {
@@ -22,7 +27,7 @@ export default function ProductCatalogTable({ products, onAddProduct }) {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider select-none">
-              <th className="py-3 px-4 font-semibold">Producto / Descripción</th>
+              <th className="py-3 px-4 font-semibold">Producto / ID</th>
               <th className="py-3 px-3 font-semibold text-center">Categoría</th>
               <th className="py-3 px-4 font-semibold text-right">Precio Unitario</th>
               <th className="py-3 px-4 font-semibold text-center">Existencia</th>
@@ -30,19 +35,40 @@ export default function ProductCatalogTable({ products, onAddProduct }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-surface-container">
-            {products.length === 0 ? (
+            {loading ? (
               <tr>
                 <td
                   colSpan={5}
                   className="py-10 px-4 text-center text-on-surface-variant font-body-md"
                 >
-                  No se encontraron productos que coincidan con tu búsqueda.
+                  Cargando productos desde la base de datos...
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="py-10 px-4 text-center text-error font-body-md"
+                >
+                  Error al consultar la base de datos: {error}
+                </td>
+              </tr>
+            ) : products.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="py-10 px-4 text-center text-on-surface-variant font-body-md"
+                >
+                  No se encontraron productos registrados.
                 </td>
               </tr>
             ) : (
               products.map((prod) => {
                 const isAdded = recentlyAddedId === prod.id_producto;
                 const isOutOfStock = prod.stock <= 0;
+                const iconMeta =
+                  CATEGORY_ICONS[prod.categoria] || CATEGORY_ICONS.Otros;
+
                 return (
                   <tr
                     key={prod.id_producto}
@@ -51,20 +77,18 @@ export default function ProductCatalogTable({ products, onAddProduct }) {
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2.5">
                         <div
-                          className={`w-8 h-8 rounded-lg bg-surface-container-high ${prod.icono_color} flex items-center justify-center shrink-0`}
+                          className={`w-8 h-8 rounded-lg bg-surface-container-high ${iconMeta.color} flex items-center justify-center shrink-0`}
                         >
                           <span className="material-symbols-outlined text-[19px]">
-                            {prod.icono}
+                            {iconMeta.icon}
                           </span>
                         </div>
                         <div>
                           <div className="font-headline-sm text-body-lg font-semibold text-on-surface group-hover:text-primary transition-colors">
                             {prod.nombre_producto}
                           </div>
-                          <div className="font-code-num text-body-sm text-on-surface-variant flex items-center gap-1.5">
-                            <span>{prod.sku}</span>
-                            <span className="text-outline-variant">•</span>
-                            <span>{prod.especificacion}</span>
+                          <div className="font-code-num text-body-sm text-on-surface-variant">
+                            id_producto: {prod.id_producto}
                           </div>
                         </div>
                       </div>
@@ -111,11 +135,10 @@ export default function ProductCatalogTable({ products, onAddProduct }) {
         </table>
       </div>
 
-      {/* Footer informativo del catálogo */}
       <div className="bg-surface-container-low px-space-md py-2.5 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-secondary" />
-          <span>Precios con IVA incluido al día</span>
+          <span>Datos sincronizados en tiempo real desde MySQL</span>
         </div>
         <div className="flex items-center gap-3">
           <span>Mostrando {products.length} productos activos</span>

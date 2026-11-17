@@ -4,6 +4,28 @@ Este archivo documenta en orden cronológico inverso todos los cambios, decision
 
 ---
 
+## [Conexión BD MySQL + Backend + Frontend (Solo Lectura)] - 2026-11-16
+
+### Cambios Realizados
+- **Backend en Capas (`backend/`)**:
+  - `backend/src/db/pool.js`: Pool de conexiones `mysql2/promise` usando variables de `.env`.
+  - `backend/src/models/tiendaModel.js`: Consultas SQL preparadas de solo lectura (`checkHealth`, `getEmpleados`, `getProveedores`, `getProductosConStock`, `getInventario`) alineadas a `references/bd/estructura.sql`.
+  - `backend/src/services/tiendaService.js`, `backend/src/controllers/tiendaController.js`, `backend/src/routes/tiendaRoutes.js`, `backend/src/middlewares/errorHandler.js` y `backend/index.js`: Endpoints `GET /api/health`, `/api/empleados`, `/api/proveedores`, `/api/productos` y `/api/inventario` con respuestas `{ success, data }` y CORS para `http://localhost:5173`.
+  - `backend/package.json`: Scripts `start` y `dev` (`node --watch index.js`).
+- **Frontend Conectado a API (`frontend/`)**:
+  - `frontend/src/services/api.js` y `frontend/src/utils/formatters.js`: Cliente HTTP centralizado (`tiendaApi`), gestión de sesión de empleado en `sessionStorage` y utilidades de formato.
+  - `LoginPage.jsx` / `LoginCard.jsx`: Validación y botones rápidos generados desde `GET /api/empleados`.
+  - `VentaPage.jsx` / `usePosCart.js` / `ProductCatalogTable.jsx`: Catálogo y existencias reales desde `GET /api/productos` mostrando `id_producto`, `nombre_producto`, `categoria`, `p_actual` y `stock` tal cual en MySQL.
+  - `CompraPage.jsx` / `usePurchaseOrder.js` / `PurchaseHeaderForm.jsx` / `PurchaseItemsTable.jsx`: Proveedores y productos reales desde `GET /api/proveedores` y `GET /api/productos`.
+  - `InventarioPage.jsx` / `useInventory.js` / `InventoryTable.jsx`: Lotes reales desde `GET /api/inventario`.
+  - Acciones de escritura (`POST`/`PUT`/`DELETE`) deshabilitadas temporalmente con modal informativo de modo solo lectura.
+
+### Verificación
+- Backend: Verificado contra MySQL (`health=True`, `empleados=4`, `proveedores=5`, `productos=12`, `inventario=12`).
+- Frontend: `pnpm run lint` (0 errores) y `pnpm run build` (292ms, 0 errores).
+
+---
+
 ## [Datos de Prueba SQL (Seed)] - 2026-11-16
 
 ### Cambios Realizados

@@ -2,21 +2,22 @@ import {
   formatCurrency,
   formatShortDate,
   getDaysUntil,
-} from '../../data/mockData';
+} from '../../utils/formatters';
 import { CategoryBadge, StockBadge } from '../common/Badge';
 
 /**
- * Tabla principal de inventario con badges de caducidad, acciones y paginación.
+ * Tabla principal de inventario mostrando los lotes tal cual están registrados en MySQL.
  */
 export default function InventoryTable({
   items,
+  loading,
+  error,
   totalCount,
   currentPage,
   totalPages,
   pageSize,
   onPageChange,
-  onEdit,
-  onDelete,
+  onReadOnlyAction,
 }) {
   const startIdx = totalCount === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const endIdx = Math.min(currentPage * pageSize, totalCount);
@@ -27,9 +28,9 @@ export default function InventoryTable({
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-surface-container-low text-outline font-label-sm text-label-sm uppercase tracking-wider select-none">
-              <th className="py-3.5 px-space-md font-semibold">SKU / ID</th>
+              <th className="py-3.5 px-space-md font-semibold">ID Lote</th>
               <th className="py-3.5 px-space-md font-semibold">
-                Producto &amp; Especificación
+                Producto (BD)
               </th>
               <th className="py-3.5 px-space-md font-semibold">Categoría</th>
               <th className="py-3.5 px-space-md font-semibold text-right">
@@ -46,7 +47,25 @@ export default function InventoryTable({
             </tr>
           </thead>
           <tbody className="text-on-surface font-body-md text-body-md">
-            {items.length === 0 ? (
+            {loading ? (
+              <tr>
+                <td
+                  colSpan={8}
+                  className="py-10 px-space-md text-center text-on-surface-variant"
+                >
+                  Cargando inventario desde MySQL...
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td
+                  colSpan={8}
+                  className="py-10 px-space-md text-center text-error"
+                >
+                  Error al consultar inventario: {error}
+                </td>
+              </tr>
+            ) : items.length === 0 ? (
               <tr>
                 <td
                   colSpan={8}
@@ -66,7 +85,7 @@ export default function InventoryTable({
                     className="hover:bg-surface-container-low/70 transition-colors group"
                   >
                     <td className="py-3.5 px-space-md font-code-num text-code-num font-semibold text-primary">
-                      {item.inv_code}
+                      #{item.id_inventario}
                     </td>
 
                     <td className="py-3.5 px-space-md">
@@ -74,8 +93,8 @@ export default function InventoryTable({
                         <span className="font-headline-sm text-headline-sm text-on-surface font-semibold">
                           {item.nombre_producto}
                         </span>
-                        <span className="font-body-sm text-body-sm text-outline">
-                          {item.especificacion} | {item.sku}
+                        <span className="font-code-num text-body-sm text-outline">
+                          id_producto: {item.id_producto}
                         </span>
                       </div>
                     </td>
@@ -102,8 +121,8 @@ export default function InventoryTable({
                           <span className="material-symbols-outlined text-[14px]">
                             alarm
                           </span>
-                          {formatShortDate(item.f_caducidad)} - ¡{Math.max(0, daysLeft)}{' '}
-                          días!
+                          {formatShortDate(item.f_caducidad)} -{' '}
+                          {daysLeft <= 0 ? '¡Vencido!' : `¡${daysLeft} días!`}
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
@@ -116,8 +135,8 @@ export default function InventoryTable({
                       <div className="inline-flex items-center gap-1">
                         <button
                           type="button"
-                          title="Editar SKU"
-                          onClick={() => onEdit(item)}
+                          title="Editar (Solo lectura)"
+                          onClick={() => onReadOnlyAction('Editar lote')}
                           className="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all cursor-pointer"
                         >
                           <span className="material-symbols-outlined text-[18px]">
@@ -126,8 +145,8 @@ export default function InventoryTable({
                         </button>
                         <button
                           type="button"
-                          title="Dar de baja o registrar merma"
-                          onClick={() => onDelete(item.id_inventario)}
+                          title="Dar de baja (Solo lectura)"
+                          onClick={() => onReadOnlyAction('Dar de baja lote')}
                           className="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container transition-all cursor-pointer"
                         >
                           <span className="material-symbols-outlined text-[18px]">
@@ -155,7 +174,7 @@ export default function InventoryTable({
           <span className="font-code-num text-code-num font-bold text-on-surface">
             {totalCount}
           </span>
-          <span>artículos en bodega</span>
+          <span>lotes en bodega</span>
         </div>
 
         <div className="flex items-center gap-space-xs">

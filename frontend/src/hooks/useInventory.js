@@ -1,35 +1,41 @@
-import { useCallback, useMemo, useState } from 'react';
-import {
-  getDaysUntil,
-  INITIAL_INVENTARIO,
-  MOCK_PRODUCTOS,
-} from '../data/mockData';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { tiendaApi } from '../services/api';
+import { getDaysUntil } from '../utils/formatters';
 
 const PAGE_SIZE = 5;
 
 /**
- * Custom Hook que gestiona el inventario mock, KPIs, filtros, paginación y CRUD en memoria.
+ * Custom Hook que consulta el inventario real desde MySQL (GET /api/inventario)
+ * en modo solo lectura.
  */
 export function useInventory() {
-  const [items, setItems] = useState(() =>
-    INITIAL_INVENTARIO.map((inv) => {
-      const prod = MOCK_PRODUCTOS.find((p) => p.id_producto === inv.id_producto);
-      return {
-        ...inv,
-        inv_code: prod.inv_code,
-        sku: prod.sku,
-        nombre_producto: prod.nombre_producto,
-        especificacion: prod.especificacion,
-        categoria: prod.categoria,
-        p_actual: prod.p_actual,
-      };
-    }),
-  );
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [reloadTick, setReloadTick] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    tiendaApi
+      .getInventario()
+      .then((data) => {
+        if (active) setItems(data);
+      })
+      .catch((err) => {
+        if (active) setError(err.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [reloadTick]);
 
   const kpis = useMemo(() => {
     const criticalCount = items.filter((item) => item.stock < 10).length;
@@ -45,9 +51,8 @@ export function useInventory() {
       const matchesQuery =
         !query ||
         item.nombre_producto.toLowerCase().includes(query) ||
-        item.sku.toLowerCase().includes(query) ||
-        item.inv_code.toLowerCase().includes(query) ||
-        item.especificacion.toLowerCase().includes(query);
+        String(item.id_inventario).includes(query) ||
+        String(item.id_producto).includes(query);
 
       const matchesCategory =
         categoryFilter === 'all' || item.categoria === categoryFilter;
@@ -89,44 +94,19 @@ export function useInventory() {
     setCurrentPage(1);
   }, []);
 
-  const saveItem = useCallback((formData, editingId = null) => {
-    if (editingId) {
-      setItems((prev) =>
-        prev.map((item) =>
-          item.id_inventario === editingId ? { ...item, ...formData } : item,
-        ),
-      );
-    } else {
-      setItems((prev) => {
-        const nextId =
-          prev.reduce((max, i) => Math.max(max, i.id_inventario), 100) + 1;
-        return [
-          {
-            id_inventario: nextId,
-            id_producto: nextId,
-            inv_code: `#INV-${nextId}`,
-            sku: `SKU-7501${nextId}`,
-            ...formData,
-          },
-          ...prev,
-        ];
-      });
-      setCurrentPage(1);
-    }
-  }, []);
-
-  const deleteItem = useCallback((idInventario) => {
-    setItems((prev) => prev.filter((item) => item.id_inventario !== idInventario));
-  }, []);
-
-  const resetFilters = useCallback(() => {
+  const refresh = useCallback(() => {
     setSearchQuery('');
     setCategoryFilter('all');
     setStatusFilter('all');
     setCurrentPage(1);
+    setLoading(true);
+    setError(null);
+    setReloadTick((prev) => prev + 1);
   }, []);
 
   return {
+    loading,
+    error,
     kpis,
     totalCount: filteredItems.length,
     paginatedItems,
@@ -140,8 +120,6 @@ export function useInventory() {
     handleSearchChange,
     handleCategoryChange,
     handleStatusChange,
-    saveItem,
-    deleteItem,
-    resetFilters,
+    refresh,
   };
 }

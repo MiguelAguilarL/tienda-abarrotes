@@ -1,11 +1,11 @@
-import { MOCK_PROVEEDORES } from '../../data/mockData';
-
 /**
- * Tarjeta superior de datos generales de la remisión de compra.
+ * Tarjeta superior de datos generales de la remisión de compra con proveedores reales.
  */
 export default function PurchaseHeaderForm({
+  providers,
   providerId,
   onProviderChange,
+  employeeLabel,
   purchaseDate,
   onDateChange,
   invoiceNumber,
@@ -43,11 +43,15 @@ export default function PurchaseHeaderForm({
               onChange={(e) => onProviderChange(Number(e.target.value))}
               className="w-full h-11 pl-3 pr-8 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container/30 transition-all cursor-pointer"
             >
-              {MOCK_PROVEEDORES.map((prov) => (
-                <option key={prov.id_proveedor} value={prov.id_proveedor}>
-                  {prov.nombre_proveedor}
-                </option>
-              ))}
+              {providers.length === 0 ? (
+                <option value="">Sin proveedores</option>
+              ) : (
+                providers.map((prov) => (
+                  <option key={prov.id_proveedor} value={prov.id_proveedor}>
+                    {prov.nombre_proveedor}
+                  </option>
+                ))
+              )}
             </select>
             <span className="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[20px]">
               expand_more
@@ -67,7 +71,7 @@ export default function PurchaseHeaderForm({
             <input
               type="text"
               readOnly
-              value="Juan Pérez (EMP-201)"
+              value={employeeLabel}
               className="w-full h-11 pl-9 pr-3 rounded-lg bg-surface-container text-on-surface-variant font-code-num text-code-num cursor-not-allowed select-none"
             />
           </div>
