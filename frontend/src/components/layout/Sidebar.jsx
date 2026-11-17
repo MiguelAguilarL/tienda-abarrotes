@@ -2,7 +2,8 @@ import { NavLink } from 'react-router-dom';
 import { clearSessionEmployee } from '../../services/api';
 
 const POS_LINKS = [
-  { to: '/venta', label: 'Punto de Venta', icon: 'point_of_sale', active: true },
+  { to: '/venta', label: 'Punto de Venta', icon: 'point_of_sale' },
+  { to: '/reportes', label: 'Reportes', icon: 'bar_chart' },
   { to: '/inventario', label: 'Inventario', icon: 'inventory_2' },
   { to: '/compra', label: 'Compras', icon: 'local_shipping' },
 ];
@@ -11,6 +12,7 @@ const WAREHOUSE_LINKS = [
   { to: '/compra', label: 'Compras', icon: 'local_shipping' },
   { to: '/inventario', label: 'Inventario', icon: 'inventory_2' },
   { to: '/venta', label: 'Punto de Venta', icon: 'point_of_sale' },
+  { to: '/reportes', label: 'Reportes', icon: 'analytics' },
 ];
 
 /**
@@ -94,32 +96,18 @@ export default function Sidebar({ variant = 'warehouse', onUnavailableClick }) {
           ))}
 
           {onUnavailableClick && (
-            <>
-              <button
-                type="button"
-                onClick={() => onUnavailableClick('Reportes')}
-                className={`flex items-center gap-space-sm px-space-md py-space-sm text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-colors cursor-pointer text-left ${
-                  isPos ? 'rounded-lg' : 'rounded-xl'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[20px]">
-                  {isPos ? 'bar_chart' : 'analytics'}
-                </span>
-                <span>Reportes</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => onUnavailableClick('Ajustes')}
-                className={`flex items-center gap-space-sm px-space-md py-space-sm text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-colors cursor-pointer text-left ${
-                  isPos ? 'rounded-lg' : 'rounded-xl'
-                }`}
-              >
-                <span className="material-symbols-outlined text-[20px]">
-                  settings
-                </span>
-                <span>Ajustes</span>
-              </button>
-            </>
+            <button
+              type="button"
+              onClick={() => onUnavailableClick('Ajustes')}
+              className={`flex items-center gap-space-sm px-space-md py-space-sm text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-colors cursor-pointer text-left ${
+                isPos ? 'rounded-lg' : 'rounded-xl'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[20px]">
+                settings
+              </span>
+              <span>Ajustes</span>
+            </button>
           )}
         </nav>
       </div>

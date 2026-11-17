@@ -4,6 +4,25 @@ Este archivo documenta en orden cronológico inverso todos los cambios, decision
 
 ---
 
+## [Punto de Venta Funcional + Reportes de Ventas] - 2026-11-16
+
+### Cambios Realizados
+- **Backend (`backend/`)**:
+  - `tiendaModel.js`, `tiendaService.js`, `tiendaController.js`, `tiendaRoutes.js`: Se agregaron los endpoints `GET /api/clientes`, `GET /api/ventas`, `GET /api/ventas/:id` y `POST /api/ventas`.
+  - Transacción atómica en `createVentaTransaction`: resuelve cliente (por defecto, existente o nuevo insertado en `cliente`), valida stock disponible y precios reales de `producto`, inserta en `venta` y `d_venta` y descuenta existencias en `inventario` por orden de caducidad (FEFO).
+  - Control anti-duplicados: validación estricta en `tiendaService.js` para rechazar (`400`) cualquier `id_producto` repetido en `d_venta`.
+- **Frontend (`frontend/`)**:
+  - `services/api.js` y `utils/formatters.js`: Soporte para `POST /api/ventas`, consulta de clientes/ventas y formato de fecha y hora (`formatDateTime`).
+  - `CheckoutModal.jsx` y `VentaPage.jsx`: Modal de cobro que solicita información del cliente (por defecto, existente o nuevo), y cuando el pago es en `Efectivo` solicita el monto recibido, calcula el cambio y lo muestra en el ticket emitido.
+  - `SaleTicketModal.jsx`: Componente reutilizable para visualizar el ticket completo de una venta (folio, fecha, empleado, cliente, método de pago, partidas, total y efectivo/cambio si aplica).
+  - `ReportesPage.jsx`, `Sidebar.jsx` y `App.jsx`: Nueva ruta `/reportes` con tabla de todas las ventas realizadas en MySQL; al hacer clic en cualquier fila se consulta `GET /api/ventas/:id` y se abre el ticket correspondiente.
+
+### Verificación
+- Backend vs MySQL: `clientes=5`, `ventas=5`, `ticket1_items=3`, validación anti-duplicados `400`.
+- Frontend: `pnpm run lint` (0 errores) y `pnpm run build` (51 módulos compilados en `456ms`).
+
+---
+
 ## [Conexión BD MySQL + Backend + Frontend (Solo Lectura)] - 2026-11-16
 
 ### Cambios Realizados

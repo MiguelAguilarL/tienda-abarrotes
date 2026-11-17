@@ -3,13 +3,14 @@ import { tiendaApi } from '../services/api';
 
 /**
  * Custom Hook que carga productos reales de MySQL (GET /api/productos)
- * y gestiona el ticket local en modo solo lectura.
+ * y controla el ticket garantizando que no existan productos duplicados.
  */
 export function usePosCart({ onRequestCheckout } = {}) {
   const searchInputRef = useRef(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [reloadTick, setReloadTick] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [ticketItems, setTicketItems] = useState([]);
@@ -30,6 +31,10 @@ export function usePosCart({ onRequestCheckout } = {}) {
     return () => {
       active = false;
     };
+  }, [reloadTick]);
+
+  const reloadProducts = useCallback(() => {
+    setReloadTick((prev) => prev + 1);
   }, []);
 
   const filteredProducts = useMemo(() => {
@@ -45,6 +50,7 @@ export function usePosCart({ onRequestCheckout } = {}) {
     });
   }, [products, selectedCategory, searchQuery]);
 
+  // Nunca duplica id_producto: si ya existe en ticketItems, incrementa su cantidad
   const addProductToTicket = useCallback((product) => {
     const available = product.stock ?? 0;
     setTicketItems((prev) => {
@@ -147,5 +153,6 @@ export function usePosCart({ onRequestCheckout } = {}) {
     updateItemQty,
     removeItem,
     clearTicket,
+    reloadProducts,
   };
 }

@@ -1,36 +1,61 @@
 import { useCallback, useState } from 'react';
 import Modal from '../../components/common/Modal';
+import SaleTicketModal from '../../components/common/SaleTicketModal';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import CatalogSearch from '../../components/venta/CatalogSearch';
 import CategoryFilter from '../../components/venta/CategoryFilter';
+import CheckoutModal from '../../components/venta/CheckoutModal';
 import ProductCatalogTable from '../../components/venta/ProductCatalogTable';
 import TicketSummary from '../../components/venta/TicketSummary';
 import { usePosCart } from '../../hooks/usePosCart';
-import { getSessionEmployee } from '../../services/api';
-import { formatCurrency } from '../../utils/formatters';
+import { getSessionEmployee, tiendaApi } from '../../services/api';
 
 /**
- * Pantalla Terminal Punto de Venta (/venta) conectada a MySQL (solo lectura).
+ * Pantalla Terminal Punto de Venta (/venta) con registro real de ventas en MySQL.
  */
 export default function VentaPage() {
-  const [checkoutModal, setCheckoutModal] = useState(null);
+  const [checkoutMethod, setCheckoutMethod] = useState(null);
+  const [issuedTicket, setIssuedTicket] = useState(null);
   const [showShortcuts, setShowShortcuts] = useState(false);
 
   const sessionEmp = getSessionEmployee();
-  const employeeName = sessionEmp?.nombre_empleado || 'Carlos López';
-  const employeeRole = sessionEmp?.puesto || 'Vendedor';
+  const employee = sessionEmp || {
+    id_empleado: 1,
+    nombre_empleado: 'Carlos López',
+    puesto: 'Vendedor',
+  };
 
   const handleRequestCheckout = useCallback((method) => {
-    setCheckoutModal({ method });
+    setCheckoutMethod(method);
   }, []);
 
   const pos = usePosCart({ onRequestCheckout: handleRequestCheckout });
 
+  const handleConfirmSale = async (clientAndPaymentPayload, cashInfo) => {
+    const items = pos.ticketItems.map((item) => ({
+      id_producto: item.id_producto,
+      cantidad_venta: item.cantidad,
+    }));
+
+    const createdSale = await tiendaApi.createVenta({
+      ...clientAndPaymentPayload,
+      items,
+    });
+
+    pos.clearTicket();
+    pos.reloadProducts();
+    setCheckoutMethod(null);
+    setIssuedTicket({
+      ...createdSale,
+      ...(cashInfo || {}),
+    });
+  };
+
   return (
     <DashboardLayout
       variant="pos"
-      employeeName={employeeName}
-      employeeRole={employeeRole}
+      employeeName={employee.nombre_empleado}
+      employeeRole={employee.puesto}
     >
       <div className="flex flex-col w-full pb-space-lg">
         <div className="flex flex-col lg:flex-row gap-space-md w-full items-start mt-space-sm">
@@ -57,63 +82,34 @@ export default function VentaPage() {
           </div>
 
           <TicketSummary
-            saleId="Pendiente"
+            saleId="Nueva"
             items={pos.ticketItems}
             totals={pos.totals}
             onUpdateQty={pos.updateItemQty}
             onRemoveItem={pos.removeItem}
             onClearTicket={pos.clearTicket}
             onCheckout={(method) =>
-              pos.ticketItems.length > 0 && setCheckoutModal({ method })
+              pos.ticketItems.length > 0 && setCheckoutMethod(method)
             }
           />
         </div>
       </div>
 
-      {/* Modal informativo de cobro (modo solo lectura) */}
-      <Modal
-        isOpen={Boolean(checkoutModal)}
-        onClose={() => setCheckoutModal(null)}
-        title="Modo Solo Lectura"
-        icon="info"
-      >
-        {checkoutModal && (
-          <div className="flex flex-col gap-space-md">
-            <div className="bg-surface-container-low rounded-xl p-space-md flex items-center justify-between">
-              <div>
-                <span className="font-label-sm text-label-sm text-outline uppercase">
-                  Método Seleccionado
-                </span>
-                <p className="font-headline-sm text-headline-sm font-bold text-on-surface">
-                  {checkoutModal.method}
-                </p>
-              </div>
-              <div className="text-right">
-                <span className="font-label-sm text-label-sm text-outline uppercase">
-                  Total Calculado
-                </span>
-                <p className="font-headline-sm text-headline-sm font-bold text-primary">
-                  {formatCurrency(pos.totals.totalAmount)} MXN
-                </p>
-              </div>
-            </div>
+      <CheckoutModal
+        key={checkoutMethod && pos.ticketItems.length > 0 ? `${checkoutMethod}-${pos.totals.totalAmount}` : 'closed'}
+        isOpen={Boolean(checkoutMethod) && pos.ticketItems.length > 0}
+        method={checkoutMethod}
+        totalAmount={pos.totals.totalAmount}
+        totalPieces={pos.totals.totalPieces}
+        employee={employee}
+        onClose={() => setCheckoutMethod(null)}
+        onConfirmSale={handleConfirmSale}
+      />
 
-            <p className="font-body-md text-body-md text-on-surface-variant">
-              Por el momento el sistema está en modo <strong>solo lectura</strong>. El registro de ventas en la base de datos (<code>venta</code>, <code>d_venta</code> y descuento en <code>inventario</code>) se habilitará en la siguiente fase.
-            </p>
-
-            <div className="flex justify-end gap-space-sm pt-space-xs">
-              <button
-                type="button"
-                onClick={() => setCheckoutModal(null)}
-                className="px-space-md py-2.5 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg cursor-pointer"
-              >
-                Entendido
-              </button>
-            </div>
-          </div>
-        )}
-      </Modal>
+      <SaleTicketModal
+        sale={issuedTicket}
+        onClose={() => setIssuedTicket(null)}
+      />
 
       {/* Modal de Atajos */}
       <Modal

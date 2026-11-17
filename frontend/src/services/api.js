@@ -3,8 +3,14 @@ const API_BASE_URL =
 
 const SESSION_KEY = 'tienda_empleado_activo';
 
-async function apiGet(endpoint) {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`);
+async function apiRequest(endpoint, options = {}) {
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    },
+    ...options,
+  });
   const payload = await response.json().catch(() => ({}));
 
   if (!response.ok || payload.success === false) {
@@ -17,10 +23,18 @@ async function apiGet(endpoint) {
 }
 
 export const tiendaApi = {
-  getEmpleados: () => apiGet('/empleados'),
-  getProveedores: () => apiGet('/proveedores'),
-  getProductos: () => apiGet('/productos'),
-  getInventario: () => apiGet('/inventario'),
+  getEmpleados: () => apiRequest('/empleados'),
+  getClientes: () => apiRequest('/clientes'),
+  getProveedores: () => apiRequest('/proveedores'),
+  getProductos: () => apiRequest('/productos'),
+  getInventario: () => apiRequest('/inventario'),
+  getVentas: () => apiRequest('/ventas'),
+  getVentaById: (id) => apiRequest(`/ventas/${id}`),
+  createVenta: (body) =>
+    apiRequest('/ventas', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
 };
 
 export function getSessionEmployee() {

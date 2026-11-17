@@ -50,6 +50,19 @@ export function formatShortDate(dateValue) {
   return `${parts[2]}/${parts[1]}/${parts[0]}`;
 }
 
+export function formatDateTime(dateValue) {
+  if (!dateValue) return '-';
+  const date = new Date(dateValue);
+  if (Number.isNaN(date.getTime())) return String(dateValue);
+  return date.toLocaleString('es-MX', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 export function getDaysUntil(dateValue) {
   if (!dateValue) return 999;
   const datePart = String(dateValue).split('T')[0];
